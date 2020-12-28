@@ -2,18 +2,34 @@ body {
     margin: 0;
     padding: 0;
 }
+
+h2 {
+    color: black;
+    font-size: 20px;
+    text-align: center;
+}
+
 .container {
     margin: 0;
     padding: 0;
     height: 100vh;
     background-color: #222;
-    background-image: url('hourglass.jpg');
+    background-image: url('fantasy-clock.jpg');
     background-repeat: no-repeat;
     background-size: cover; 
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
     align-items: center;
+}
+
+.card {
+    background-color: hsla(360, 10%, 60%, 80%);
+    height: 300px;
+    width: 250px;
+    margin: 20px;
+    padding: 10px;
+    border-radius: 5%;
 }
 
 header {
@@ -27,16 +43,9 @@ h1 {
     font-family: Arial, Helvetica, sans-serif;
 }
 
-#invisible {
-    width: 250px;
-    height: 300px;;
-    margin: 20px;
-}
-
 #timer {
     text-align: center;
     font-family: Arial, Helvetica, sans-serif;
-    margin: 20px;
 }
 
 #clock-display {
@@ -44,15 +53,31 @@ h1 {
     margin: 20px;
 }
 
+#unassigned-poms {
+    margin-top: 30px;
+    font-size: 30px;
+}
+
 button {
     font-size: 18px;
-    background: hsla(200, 20%, 80%, 100%);
+    background: hsla(360, 50%, 80%, 100%);
+    border: 1px solid black;
+    border-radius: 10%;
     padding: 10px;
     margin: 5px;
-    border: none;
 }
 
 #project-info {
-    margin: 40px;
-    font-size: 30px;
+    font-size: 25px;
+    text-align: center;
+}
+
+#pom-chest {
+    text-align: left;
+    font-size: 20px;
+    color: red;
+}
+
+#projects-list {
+    line-height: 1;
 }

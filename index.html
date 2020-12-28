@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://use.fontawesome.com/c06d70f404.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
@@ -8,19 +9,35 @@
 </head>
 <body>
     <div class="container">
-        <div id="invisible"></div>
-        <div id="timer">
+
+        <div id="timer" class="card">
+            <h2> Timer</h2>
             <div id="clock-display"></div>
             <div id="clock-controls">
                 <button id="start-button">Start</button>
                 <button id="stop-button">Stop</button>
                 <button id="reset-button">Reset</button>
             </div>
-            <div id="project-info">
-                <p id="display-project"></p>
-                <p id="display-poms">Pom Count: </p>
-            </div>
+            <div id="unassigned-poms"></div>
         </div>
+
+        <div id="project-info" class="card">
+            <h2>Active Project</h2>
+            <p id="project-display"></p>
+            <p id="level-display"></p>
+            <p id="poms-display"></p>
+            <button id="change-project-button">Change Project</button>
+        </div>
+
+        <div id="projects-div" class="card">
+            <h2>Projects</h2>
+            <div id="projects-list"></div>
+        </div>
+
+        <div id="skills-list" class="card">
+            <h2>Skills</h2>
+        </div>
+
     </div>
     <script src="script.js"></script>
     </body>

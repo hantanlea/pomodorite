@@ -9,7 +9,7 @@ Version 4
 
 
 Version 3
-[ ] Sort out git
+[X] Sort out git
 [ ] Set up github pages
 [ ] Get rid of global variables
 [ ] The website should look prettier!
