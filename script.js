@@ -40,6 +40,7 @@ class Skill {
     }
 
     levelUp() {
+        alert(`${this.name} Level Up!!`)
         this.level += 1;
     }
 
@@ -61,12 +62,11 @@ class Skill {
         this.pomsList[pomodoro.timestamp] = pomodoro;
         this.pomCount += 1;
         this.startDate = pomodoro.getStartTime();
-        if (this.poms >= 40) {
+        if (this.pomCount >= 40) {
             this.levelUp();
-            this.poms = 0;
+            this.pomCount = 0;
         }
     }
-
 }
 
 /**
@@ -286,12 +286,13 @@ class Session {
 
         this.projectsList = {};
         this.activeProject = new Project("unassigned", this);
+        this.activeProject = new Project("Coding");
+        this.activeProject.pomCount = 39;
         this.projectsList[this.activeProject.name] = this.activeProject;
         this.pomLength = 0.1;
         this.currentPom = new Pomodoro(this.pomLength, this.activeProject, this);
         this.assignButtons();
         this.updateDisplay();
-        this.currentPom.updateDisplay()
     }
 
     assignButtons() {
@@ -307,8 +308,14 @@ class Session {
         while (display.poms.firstChild) {
             display.poms.removeChild(display.poms.firstChild);
         }
-        for (let i = 0; i < this.activeProject.pomCount; i++) {
+        for (let i = 1; i <= this.activeProject.pomCount; i++) {
             display.poms.appendChild(display.makeCrystal());
+            
+            if (i > 0 && i % 10 == 0) {
+                let tens = document.createElement('span');
+                tens.innerText = ' ' + i;
+                display.poms.appendChild(tens);
+            }
         }
         while (display.projectsList.firstChild) {
             display.projectsList.removeChild(display.projectsList.firstChild);
@@ -316,17 +323,29 @@ class Session {
         for (let projectName in this.projectsList) {
             if (projectName == "unassigned") continue;
             let project = this.projectsList[projectName];
-            let projectLi = document.createElement('li');
-            projectLi.innerText = project.name + ' Lvl ' + project.level;
-            let pomsUl = document.createElement('ul');
-            let pomsLi = document.createElement('li');
+            let projectDiv = document.createElement('div');
+            projectDiv.classList.add('project-div');
+            let projectTitle = document.createElement('h3');
+            projectTitle.innerText = project.name + ' Lvl ' + project.level;
+            projectTitle.classList.add('project-title');
+            projectDiv.appendChild(projectTitle);
+            let pomsTable = document.createElement('table');
+            let row = document.createElement('tr');
+            for (let i = 0; i < 40; i++) {
+                let cell = document.createElement('td');
+                cell.classList.add('pom-cell');
+                if (i < project.pomCount) cell.classList.add('filled');
+                row.appendChild(cell);
+            } 
+            pomsTable.appendChild(row);
+            projectDiv.appendChild(pomsTable);
+/*             let pomsDiv = document.createElement('div');
+            pomsDiv.classList.add('poms-div');
             for (let i = 0; i < project.pomCount; i++) {
                 let crystal = display.makeCrystal();
-                pomsLi.appendChild(crystal);
-            }
-            pomsUl.appendChild(pomsLi);
-            display.projectsList.appendChild(projectLi);
-            projectLi.appendChild(pomsUl);
+                pomsDiv.appendChild(crystal);
+            } */
+            display.projectsList.appendChild(projectDiv);
         }
         this.currentPom.updateDisplay();
     }
