@@ -1,24 +1,23 @@
 Version 4
-[ ] There should be a pause button which pauses the pomodoro
-[ ] The stop button should be changed to abandon and destroys the pomodoro
-[ ] You should be able to select the project from a dropdown
-[ ] There should be a button to add a new project
-[ ] The default project name should be "unassigned"
-[ ] When a pomodoro is complete a diamond should appear
+[ ] Remove all direct accessing of properties outside of the object itself
+[X] There should be a pause button which pauses the pomodoro
+[X] You should be able to select the project from a dropdown
+[X] There should be a button to add a new project
+[X] The default project name should be "unassigned"
+[X] When a pomodoro is complete a diamond should appear underneath unassigned
 [ ] There should be an option to assign a completed pomodoro to a different project
-
-
-Version 3
-[X] Sort out git
-[ ] Set up github pages
-[ ] Get rid of global variables
-[ ] The website should look prettier!
-[ ] The buttons should be prettier
-[ ] Pomodoros should be displayed as a bar of 4 x 10 block of crystals
-[ ] The start button should be disabled after being pressed
 [ ] When the timer completes project should change to Break and timer should reset to break timer
 [ ] Break is a hidden project
 [ ] Break pomodoro is a hidden pomodoro
+
+Version 3
+[X] Sort out git
+[X] Set up github pages
+[X] Get rid of global variables
+[X] The website should look prettier!
+[X] The buttons should be prettier
+[X] Pomodoros should be displayed as a bar of 4 x 10 block of crystals
+[X] The start button should be disabled after being pressed
 
 Version 2
 [X] There should be a pomodoro object

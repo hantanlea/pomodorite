@@ -1,19 +1,180 @@
 "use strict"
 
 /**
- * A PomsList is an Object containing Pomodoro Objects indexed by their timestamp
- * @typedef {Object.<number, Pomodoro>} PomsList
+ * A Session represents the current session from when the page loads, to when the user quits.
+ * The session keeps track of the currently active project, loads and updates the users projects list and custom settings
+ * The Session keeps track of all completed pomodoros and project progress.
+ * @typedef {Object} Session
+ * @property {Date} timestamp
+ * @property {Object} projectsList
+ * @property {Project} activeProject
+ * @property {number} pomLength
+ * @property {Pomodoro} currentPom
+ * @example {
+ * timestamp: 1607970035642,
+ * projectsList: {Coding: Project},
+ * activeProject: {Project},
+ * pomLength: 25,
+ * currentPom: {Pomodoro}, }
  */
 
+class Session {
+
+    constructor() {
+
+        this.projectsList = {};
+        this.activeProject = new Project("unassigned", this);
+        this.projectsList[this.activeProject.name] = this.activeProject;
+        this.projectCount = 0;
+        this.pomLength = 25;
+        this.breakLength = 5;
+        this.currentPom = new Pomodoro(this.pomLength, this.activeProject, this);
+        this.assignButtons();
+        this.updateDisplay();
+    }
+
+    assignButtons() {
+        display.start.addEventListener('click', () => this.currentPom.start.call(this.currentPom));
+        display.stop.addEventListener('click', () => this.currentPom.stop.call(this.currentPom));
+        display.reset.addEventListener('click', () => this.currentPom.reset.call(this.currentPom));
+        display.newProject.addEventListener('click', () => this.addProject.call(this));
+        display.lengthInput.addEventListener('change', () => this.changePomLength.call(this, +display.lengthInput.value)); 
+        display.projectSelectDropdown.addEventListener('change', () => this.changeProject.call(this, display.projectSelectDropdown.value));
+    }
+
+    changePomLength (length) {
+        this.pomLength = length;
+        this.currentPom.setLength(length);
+        this.updateDisplay();
+    }
+
+    updateDisplay() {
+        // ACTIVE PROJECT
+        this.activeProject.name == "unassigned" ? display.project.innerText = "No Project Selected" : display.project.innerText = this.activeProject.name 
+        display.level.innerText = `${this.activeProject.name == "unassigned" ? "" : " Level " + this.activeProject.level}`;
+        while (display.poms.firstChild) {
+            display.poms.removeChild(display.poms.firstChild);
+        }
+        for (let i = 1; i <= this.activeProject.pomCount; i++) {
+            display.poms.appendChild(display.makeCrystal());
+            
+            if (i > 0 && i % 10 == 0) {
+                let tens = document.createElement('span');
+                tens.innerText = ' ' + i;
+                display.poms.appendChild(tens);
+            }
+        }
+        
+            
+        // TIMER
+        display.lengthInput.value = this.pomLength;
+        display.breakInput.value = this.breakLength;
+        while (display.projectsList.firstChild) {
+            display.projectsList.removeChild(display.projectsList.firstChild);
+        }
+
+        while (display.projectSelectDropdown.firstChild) {
+            display.projectSelectDropdown.removeChild(display.projectSelectDropdown.firstChild);
+        }
+        for (let projectName in this.projectsList) {
+            if (projectName == "unassigned") continue;
+
+            // PROJECTS LIST
+            let project = this.projectsList[projectName];
+            let projectDiv = document.createElement('div');
+            projectDiv.classList.add('project-div');
+            let projectTitle = document.createElement('h3');
+            projectTitle.innerText = project.name + ' Lvl ' + project.level;
+            projectTitle.classList.add('project-title');
+            projectDiv.appendChild(projectTitle);
+            let pomsTable = document.createElement('table');
+            let row = document.createElement('tr');
+            for (let i = 0; i < 40; i++) {
+                let cell = document.createElement('td');
+                cell.classList.add('pom-cell');
+                if (i < project.pomCount) cell.classList.add('filled');
+                row.appendChild(cell);
+            } 
+            pomsTable.appendChild(row);
+            projectDiv.appendChild(pomsTable);
+/*             let pomsDiv = document.createElement('div');
+            pomsDiv.classList.add('poms-div');
+            for (let i = 0; i < project.pomCount; i++) {
+                let crystal = display.makeCrystal();
+                pomsDiv.appendChild(crystal);
+            } */
+            display.projectsList.appendChild(projectDiv);
+
+            // PROJECT DROPDOWN
+            let option = document.createElement('option');
+            option.value = project.getName();
+            option.text = project.getName();
+            if (this.activeProject.getName() == option.value) {
+                option.setAttribute('selected', true);
+            }
+            display.projectSelectDropdown.add(option);
+        }
+        if (this.projectCount == 0) {
+            display.projectsDiv.classList.add('inactive');
+            display.projectSelect.classList.add('inactive');
+        } else {
+            display.projectsDiv.classList.remove('inactive');
+            display.projectSelect.classList.remove('inactive');
+        }
+        this.currentPom.updateDisplay();
+    }
+
+    /**
+     * Initialises and returns a new Pomodoro Object
+     * @param 
+     * @return {Pomodoro}
+     */
+    nextPomodoro() {
+        if (this.currentPom) this.activeProject = this.currentPom.project;
+        this.currentPom = new Pomodoro(this.pomLength, this.activeProject, this);
+        this.updateDisplay();
+        return this.currentPom;
+    }
+
+    projectExists(projectName) {
+        return projectName in this.projectsList;
+    }
+
+    changeProject(projectName) {
+        let project;
+        if (this.projectExists(projectName)) {
+            project = this.projectsList[projectName];
+        } else {
+            project = session.addProject(projectName);
+        }
+        this.activeProject = project;
+        this.currentPom.setProject(project);
+        this.updateDisplay();
+    }
+
+    addProject(projectName = prompt('Name the new project')) {
+        if (confirm(`Create new project: ${projectName}?`)) {
+            let newProject = new Project(projectName);
+
+            this.projectsList[newProject.name] = newProject;
+            this.projectCount += 1;
+            this.activeProject = newProject;
+            this.updateDisplay();
+            return newProject;
+        } else {
+            return false;
+        }
+    }
+}
 /**
- * A Skill is an Object representing a top level learning project which tracks ONLY the number of completed pomodoros and the overall
- * skill level achieved. Skills can never be 'completed' as Projects can.
+ * The Skill class produces Skill Objects which represent a top level learning project which tracks ONLY the number 
+ * of completed pomodoros and the overall skill level achieved. Skills can never be 'completed' as Projects can.
  * @class Skill
  * @param {string} name The name of the project
  * @param {Session} session The Session object
  * @param {number} level The level on this project (a level represents 40 completed pomodoros)
  * @param {number} pomCount The number of completed pomodoros from 0 - 40
- * @param {PomsList} pomsList An Object containing references to all completed pomodoros for this skill/project indexed by id
+ * @param {Array} pomsList An Object containing references to all completed pomodoros for this skill/project indexed by id
  * @param {Date} startDate The timestamp of the first pomodoro on this project
  * @example {
  * name: "Coding",
@@ -23,12 +184,20 @@
  */
 class Skill {
 
-    constructor(name, session, level = 0, pomCount = 0, pomsList = {}) {
+    constructor(name, startDate = new Date(), level = 0, pomCount = 0, pomsList = []) {
         this.name = name;
-        this.session = session;
+        this.startDate = startDate;
         this.level = level;
         this.pomCount = pomCount;
-        this.pomsList = pomsList
+        this.pomsList = pomsList;
+    }
+
+    setName(name) {
+        this.name = name;
+    }
+
+    getName() {
+        return this.name;
     }
 
     setLevel(level) {
@@ -44,11 +213,11 @@ class Skill {
         this.level += 1;
     }
 
-    setPoms(poms) {
-        this.poms = poms;
+    setPomCount(pomCount) {
+        this.pomCount = pomCount;
     }
 
-    getPoms() {
+    getPomCount() {
         return this.poms;
     }
 
@@ -58,10 +227,9 @@ class Skill {
      * @return {Undefined}
      */
     addPom(pomodoro) {
-        if (pomodoro.isComplete == false) return;
-        this.pomsList[pomodoro.timestamp] = pomodoro;
+        if (pomodoro.isComplete() == false) return;
+        this.pomsList.push(pomodoro);
         this.pomCount += 1;
-        this.startDate = pomodoro.getStartTime();
         if (this.pomCount >= 40) {
             this.levelUp();
             this.pomCount = 0;
@@ -130,8 +298,9 @@ class Pomodoro {
         return this.length;
     }
 
-    setLength(length) {
-        this.length = length;
+    setLength(mins) {
+        this.length = mins;
+        this.remaining = mins * 60 * 1000;
     }
     
     isStarted() {
@@ -150,16 +319,8 @@ class Pomodoro {
         return this.remaining;
     }
 
-    setRemaining(timestamp) {
-        this.remaining = timestamp;
-    }
-
-    setLength(length) {
-        this.length = length;
-    }
-
-    getLength() {
-        return this.length;
+    setRemaining(ms) {
+        this.remaining = ms;
     }
 
     setProject(project) {
@@ -262,157 +423,6 @@ class Pomodoro {
 
 
 
-/**
- * A Session represents the current session from when the page loads, to when the user quits.
- * The session keeps track of the currently active project, loads and updates the users projects list and custom settings
- * The Session keeps track of all completed pomodoros and project progress.
- * @typedef {Object} Session
- * @property {Date} timestamp
- * @property {Object} projectsList
- * @property {Project} activeProject
- * @property {number} pomLength
- * @property {Pomodoro} currentPom
- * @example {
- * timestamp: 1607970035642,
- * projectsList: {Coding: Project},
- * activeProject: {Project},
- * pomLength: 25,
- * currentPom: {Pomodoro}, }
- */
-
-class Session {
-
-    constructor() {
-
-        this.projectsList = {};
-        this.activeProject = new Project("unassigned", this);
-        this.activeProject = new Project("Coding");
-        this.activeProject.pomCount = 39;
-        this.projectsList[this.activeProject.name] = this.activeProject;
-        this.pomLength = 0.1;
-        this.currentPom = new Pomodoro(this.pomLength, this.activeProject, this);
-        this.assignButtons();
-        this.updateDisplay();
-    }
-
-    assignButtons() {
-        display.start.addEventListener('click', () => this.currentPom.start.call(this.currentPom));
-        display.stop.addEventListener('click', () => this.currentPom.stop.call(this.currentPom));
-        display.reset.addEventListener('click', () => this.currentPom.reset.call(this.currentPom));
-        display.changeProject.addEventListener('click', () => this.changeProject.call(this));
-    }
-
-    updateDisplay() {
-        display.project.innerText = this.activeProject.name 
-        display.level.innerText = `${this.activeProject.name == "unassigned" ? "" : " Level " + this.activeProject.level}`;
-        while (display.poms.firstChild) {
-            display.poms.removeChild(display.poms.firstChild);
-        }
-        for (let i = 1; i <= this.activeProject.pomCount; i++) {
-            display.poms.appendChild(display.makeCrystal());
-            
-            if (i > 0 && i % 10 == 0) {
-                let tens = document.createElement('span');
-                tens.innerText = ' ' + i;
-                display.poms.appendChild(tens);
-            }
-        }
-        while (display.projectsList.firstChild) {
-            display.projectsList.removeChild(display.projectsList.firstChild);
-        }
-        for (let projectName in this.projectsList) {
-            if (projectName == "unassigned") continue;
-            let project = this.projectsList[projectName];
-            let projectDiv = document.createElement('div');
-            projectDiv.classList.add('project-div');
-            let projectTitle = document.createElement('h3');
-            projectTitle.innerText = project.name + ' Lvl ' + project.level;
-            projectTitle.classList.add('project-title');
-            projectDiv.appendChild(projectTitle);
-            let pomsTable = document.createElement('table');
-            let row = document.createElement('tr');
-            for (let i = 0; i < 40; i++) {
-                let cell = document.createElement('td');
-                cell.classList.add('pom-cell');
-                if (i < project.pomCount) cell.classList.add('filled');
-                row.appendChild(cell);
-            } 
-            pomsTable.appendChild(row);
-            projectDiv.appendChild(pomsTable);
-/*             let pomsDiv = document.createElement('div');
-            pomsDiv.classList.add('poms-div');
-            for (let i = 0; i < project.pomCount; i++) {
-                let crystal = display.makeCrystal();
-                pomsDiv.appendChild(crystal);
-            } */
-            display.projectsList.appendChild(projectDiv);
-        }
-        this.currentPom.updateDisplay();
-    }
-
-    nextPomodoro() {
-        if (this.currentPom) this.activeProject = this.currentPom.project;
-        this.currentPom = new Pomodoro(this.pomLength, this.activeProject, this);
-        this.updateDisplay();
-    }
-
-    projectExists(project) {
-        return project.name in this.projectsList;
-    }
-
-    changeProject(project) {
-        if (!project) {
-            let projectName = prompt("Which Project?");
-            if (this.projectExists(projectName)) {
-                project = this.projectsList[projectName];
-            } else {
-                project = session.addProject(projectName);
-            }
-        }
-        this.activeProject = project;
-        this.currentPom.setProject(project);
-        this.updateDisplay();
-    }
-
-    addProject(projectName) {
-        if (confirm(`Create new project: ${projectName}?`)) {
-            let newProject = new Project(projectName);
-            this.projectsList[newProject.name] = newProject;
-            return newProject;
-        } else {
-            return false;
-        }
-    }
-
-
-
-    /*     startPomodoro() {
-            this.currentPom.start();
-            function tick() {
-                this.currentPom.setRemaining(this.currentPom.getRemaining() - 1000);    
-                if (this.currentPom.getRemaining() > 0) {
-                    timerId = setTimeout(tick, 1000);
-                } else {
-                    clearTimeout(timerId);
-                    this.completePomodoro();
-                };
-                display.clock.innerText = display.timeToString(this.currentPom.getRemaining());
-            }
-            tick = tick.bind(this);
-            let timerId = setTimeout(tick, 1000);
-    
-        } */
-
-    /*     completePomodoro() {
-            this.currentPom.markComplete();
-            display.unassignedPoms.appendChild(this.crystal());
-            let assignPom = this.assignPomodoro.bind(this);
-            crystal.addEventListener('click', assignPom);
-            crystal.addEventListener('click', () => display.unassignedPoms.removeChild(crystal));
-            this.activeProject.addPom();
-        } */
-
-}
 
 class User {
 
@@ -434,7 +444,12 @@ let display = {
     level: document.getElementById('level-display'),
     projectsList: document.getElementById('projects-list'),
     poms: document.getElementById('poms-display'),
-    changeProject: document.getElementById('change-project-button'),
+    newProject: document.getElementById('new-project-button'),
+    projectsDiv: document.getElementById('projects-div'),
+    lengthInput: document.getElementById('pom-length-input'),
+    breakInput: document.getElementById('break-length-input'),
+    projectSelect: document.getElementById('project-select'),
+    projectSelectDropdown: document.getElementById('project-select-dropdown'),
 
     /**
      * Takes in the time in minutes and returns a string formatted mm:ss 

@@ -174,3 +174,16 @@ td {
 td.filled {
     background: red;
 }
+
+.inactive {
+    display: none;
+}
+
+input {
+    font-size: 18px;
+    width: 5em;
+}
+
+label {
+    font-size: 16px;
+}
