@@ -1,11 +1,19 @@
-Version 4
+Version 5
+[ ]
 [ ] Remove all direct accessing of properties outside of the object itself
+
+Version 4
+[ ] Restructure to do more sending of params to functions and returning useful values 
+[ ] Use class fields instead of putting everything in constructor
+[ ] Think about private properties vs public properties and set up accordingly
+[ ] Use func = () => {func(this)} instead of current werid binding methods
+
 [X] There should be a pause button which pauses the pomodoro
 [X] You should be able to select the project from a dropdown
 [X] There should be a button to add a new project
 [X] The default project name should be "unassigned"
 [X] When a pomodoro is complete a diamond should appear underneath unassigned
-[ ] There should be an option to assign a completed pomodoro to a different project
+[X] There should be an option to assign a completed pomodoro to a different project
 [ ] When the timer completes project should change to Break and timer should reset to break timer
 [ ] Break is a hidden project
 [ ] Break pomodoro is a hidden pomodoro
