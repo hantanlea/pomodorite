@@ -54,7 +54,7 @@ class User {
     newPomodoro() {
         this.activePom = new Pomodoro(this.settings.pomLength, this.activeProject);
         gui.updateDisplay();
-        @return this.activePom;
+        return this.activePom;
     }
 
     setName(name) {
@@ -233,6 +233,7 @@ class Skill {
     levelUp() {
         alert(`${this.name} Level Up!!`)
         this.level += 1;
+        this.pomsList[this.level] = [];
         gui.updateDisplay();
     }
 
@@ -254,9 +255,8 @@ class Skill {
         if (pomodoro.isComplete() == false) return false;
         pomodoro.project = user.activeProject;
         let pomIndex = this.pomsList[this.level].push(pomodoro) - 1;
-        this.pomCount = this.pomsList[this.level].length;
         pomodoro.setLocation(this.level, pomIndex)
-        if (this.pomsList[this.level].length >= 40) {
+        if (this.getPomCount() >= 40) {
             this.levelUp();
         }
         gui.updateDisplay();
@@ -422,7 +422,7 @@ class Pomodoro {
     complete() {
         this.stop();
         this.completed = true;
-        this.project.addPom(this);
+        user.activeProject.addPom(this);
         user.newPomodoro();
         gui.updateDisplay();
     }
@@ -439,7 +439,7 @@ class Pomodoro {
 
 
 let defaultSettings = {
-    pomLength: 25,
+    pomLength: 0.1,
     breakLength: 5,
     longBreakLength: 15,
 }
@@ -456,7 +456,9 @@ let gui = {
     project: document.getElementById('project-display'),
     level: document.getElementById('level-display'),
     projectsList: document.getElementById('projects-list'),
-    poms: document.getElementById('poms-display'),
+    progressCard: document.getElementById('progress-card'),
+    projectProgressTitle: document.getElementById('project-progress-title'),
+    pomsDisplay: document.getElementById('poms-display'),
     newProject: document.getElementById('new-project-button'),
     projectsDiv: document.getElementById('projects-div'),
     lengthInput: document.getElementById('pom-length-input'),
@@ -487,18 +489,23 @@ let gui = {
     updateDisplay: function () {
         // ACTIVE PROJECT
         let activeProject = user.getActiveProject();
-        activeProject.getName() == "unassigned" ? this.project.innerText = "No Project Selected" : this.project.innerText = activeProject.getName();
+        this.project.innerText = activeProject.getName() == "unassigned" ?  "No Project Selected" : activeProject.getName();
         this.level.innerText = `${activeProject.getName() == "unassigned" ? "" : " Level " + activeProject.getLevel()}`;
-        while (this.poms.firstChild) {
-            this.poms.removeChild(this.poms.firstChild);
+
+        // Poms Display
+        this.projectProgressTitle.innerText = activeProject.getName() == "unassigned" ? "Unassigned Pomodoros" : activeProject.getName();
+
+        while (this.pomsDisplay.firstChild) {
+            this.pomsDisplay.removeChild(this.pomsDisplay.firstChild);
         }
-        for (let i = 0; i < activeProject.getPomCount(); i++) {
+
+        for (let i = 1; i <= activeProject.getPomCount(); i++) {
             let pomodoro = activeProject.getWorkingPomsList()[i];
-            this.poms.appendChild(this.makeCrystal(pomodoro));
+            this.pomsDisplay.appendChild(this.makeCrystal(pomodoro));
             if (i > 0 && i % 10 == 0) {
                 let tens = document.createElement('span');
-                tens.innerText = ' ' + p;
-                this.poms.appendChild(tens);
+                tens.innerText = ' ' + i;
+                this.pomsDisplay.appendChild(tens);
             }
         }
 
@@ -574,12 +581,6 @@ let gui = {
     reassignCrystal: function () {
         let oldProject = this.pomodoro.getProject();
         let newProject = user.createNewProject();
-        /*         let newProjectName = prompt("Which Project?");
-                if (user.projectExists(newProjectName)) {
-                    newProject = user.getProjectsList()[newProjectName];
-                } else {
-                    newProject = user.addProject(newProjectName);
-                } */
         oldProject.removePom(...this.pomodoro.getLocation());
         this.pomodoro.setProject(newProject);
         newProject.addPom(this.pomodoro);
@@ -596,12 +597,6 @@ let gui = {
 function timeToString(time) {
     let minutes = Math.floor(time / 60000);
     let seconds = Math.floor((time / 1000) - (minutes * 60));
-    /*         function minutes(timestamp) {
-                return Math.floor(timestamp / 60000);
-            }
-            function seconds(timestamp) {
-                return Math.floor(timestamp / 1000);
-            } */
     return `${minutes < 10 ? "0" : ""}${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
 }
 
@@ -610,5 +605,11 @@ if (!user) {
     user = new User("anon");
 }
 let session = user.newSession();
-gui.updateDisplay();
 /* TESTS */
+
+user.addProject(new Project('Coding'));
+user.setActiveProject(user.projectsList['Coding']);
+for (let i = 0; i < 39; i++) {
+    let pom = new Pomodoro(25, true, true, 0);
+    user.projectsList['Coding'].addPom(pom);
+}

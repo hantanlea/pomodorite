@@ -10,46 +10,72 @@
 
 <body>
     <div class="container">
-        <div id="timer" class="card">
-            <h2> Timer</h2>
-            <div id="clock-display"></div>
-            <div id="unassigned-poms"></div>
-            <form id="settings">
-                <label for="pom-length-input">Pomodoro Length:</label>
-                <input type="text" id="pom-length-input">
-                <label for="break-length-input">Break Length:</label>
-                <input type="text" id="break-length-input">
-            </form>
-            <div id="clock-controls">
-                <button id="start-button">Start</button>
-                <button id="stop-button">Stop</button>
-                <button id="reset-button">Reset</button>
-            </div>
-            </div>
-            
-            <div id="project-info" class="card">
-                <h2>Active Project</h2>
-                <p id="project-display"></p>
-                <p id="level-display"></p>
-                <p id="poms-display"></p>
+        <header>
+            <h1>Pomodojo</h1>
+        </header>
+
+        <div class="toolbar">
+            <div id="project-info">
+                <h2>Active Project:</h2>
+                <span id="project-display"></span>
+                <div id="level-display"></div>
                 <div id="project-select">
                     <label for="project-select">Select Project:</label>
                     <select name="project-select" id="project-select-dropdown"></select>
                 </div>
-                <button id="new-project-button">New Project</button>
             </div>
-            
-            <div id="projects-div" class="card">
+        </div>
+        
+        <div class="lsidebar">
+            <div id="projects-div">
                 <h2>Projects</h2>
-                <div id="projects-list"></div>
+                <div id="projects-list">
+                </div>
             </div>
-            
-            <!--             <div id="skills-list" class="card">
-                            <h2>Skills</h2>
-                        </div> -->
-            
+            <button id="new-project-button">New Project</button>
+        </div>
+        
+        <div class="rsidebar">
+        
+        </div>
+        
+        <main>
+            <div id="timer" class="card">
+                <h2> Timer</h2>
+                <div id="clock-display"></div>
+                <div id="unassigned-poms"></div>
+                <div id="clock-controls">
+                    <button id="start-button">Start</button>
+                    <button id="stop-button">Stop</button>
+                    <button id="reset-button">Reset</button>
+                </div>
             </div>
-            <script src="script.js"></script>
-            </body>
-            
-            </html>
+            <div id="progress-card" class="card">
+                <h2 id="project-progress-title"></h2>
+                <div id="poms-display"></div>
+                <p>Click crystal to assign to a project</p>
+            </div>
+            <div class="card"></div>
+
+            <div class="settings">
+                <form id="settings">
+                    <label for="pom-length-input">Pomodoro Length:</label>
+                    <input type="text" id="pom-length-input">
+                    <label for="break-length-input">Break Length:</label>
+                    <input type="text" id="break-length-input">
+                </form>
+            </div>
+
+        
+        </main>
+        <footer>
+            <p>Blah blah blah</p>
+        </footer>
+        </div>
+        
+        </div>
+        
+        <script src="script.js"></script>
+        </body>
+        
+        </html>
