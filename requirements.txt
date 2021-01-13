@@ -1,5 +1,8 @@
+Version 6
+[ ] Timer is represented by a little hero running along a path towards a crystal defeating monsters
+
 Version 5
-[ ]
+[ ] CSS Transitions on menus
 [ ] Remove all direct accessing of properties outside of the object itself
 
 Version 4

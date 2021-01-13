@@ -46,14 +46,24 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+a {
+    text-decoration: none;
+}
 
 /* MY CSS */
+
+* {
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+  }
+
 :root {
     --back-color: hsl(220, 10%, 95%);
     --header-color: hsla(220, 10%, 20%, 100%);
     --footer-color: var(--header-color);
     --card-color: white; 
-    --sidebar-color: hsla(220, 10%, 20%, 100%);
+    --sidebar-color: #34495e;
     --color3: var(--card-color); 
     --buttoncolor: var(--back-color);
 }
@@ -66,7 +76,7 @@ main {
     display: grid;
     height: 100vh;
     grid-template-columns: 180px repeat(10, 1fr) 80px;
-    grid-template-rows: 40px 50px auto 30px;
+    grid-template-rows: 40px 40px auto 30px;
     grid-template-areas: 
         "h h h h h h h h h h h h"
         "p p p p p p p p p p p p"
@@ -101,12 +111,34 @@ header h1 {
     color: #ddd;
     font-size: 16px;
     line-height: 1.5;
-    padding: 10px;
     color: #eee;
     display: flex;
     flex-flow: column nowrap;
     justify-content: space-between;
-    align-items: center;
+    align-items: stretch;
+}
+
+.lsidebar ul {
+}
+
+.lsidebar li {
+    margin-bottom: 20px;
+}
+
+.lsidebar a {
+    display: block;
+    width: 100%;
+    padding: 5px;
+    width: 100%;
+    color: #eee;
+    background-color: hsla(220, 10%, 90%, 50%);
+    font-size: 18px;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+}
+
+#projects-list {
+    display: none;
 }
 
 .toolbar {
@@ -143,10 +175,9 @@ main {
 .card {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2); 
     background-color: var(--card-color); 
-    height: 200px;
-    width: 250px;
+    height: 250px;
+    width: 300px;
     margin: 20px;
-    padding: 30px 10px;
     display: flex;
     flex-flow: column nowrap;
     justify-content: flex-start;
@@ -155,7 +186,15 @@ main {
 }
 
 .card h2 {
+    text-align: center;
+    width: 100%;
     font-size: 18px;
+    padding: 10px;
+    background-color: #a8ccee;
+}
+
+.card .card-content {
+    padding: 20px;
 }
 
 .card h3 {
@@ -190,12 +229,11 @@ button {
 
 #poms-display {
     text-align: left;
-    font-size: 18px;
+    font-size: 16px;
     padding: 5px;
     color: hsla(220, 80%, 40%, 100%);
-    border: 1px dotted black;
+    border: 1px dashed #555;
     width: 230px;
-    height: 4em;
     margin: 30px;
 }
 

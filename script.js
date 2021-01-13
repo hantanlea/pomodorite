@@ -465,6 +465,12 @@ let gui = {
     breakInput: document.getElementById('break-length-input'),
     projectSelect: document.getElementById('project-select'),
     projectSelectDropdown: document.getElementById('project-select-dropdown'),
+    projectsListLink: document.getElementById('projects-list-link'),
+    
+    setUpMenus: function() {
+        this.projectsListLink.addEventListener('click', () => this.projectsList.style.display = this.projectsList.style.display == "block" ? "none" : "block");
+
+    },
 
     addEvents: function () {
         this.start.addEventListener('click', () => user.activePom.start());
@@ -600,6 +606,7 @@ function timeToString(time) {
     return `${minutes < 10 ? "0" : ""}${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
 }
 
+gui.setUpMenus();
 let user;
 if (!user) {
     user = new User("anon");
