@@ -2,93 +2,101 @@
 <html lang="en">
 
 <head>
-    <script src="https://use.fontawesome.com/c06d70f404.js"></script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <title>Document</title>
+  <script src="https://use.fontawesome.com/c06d70f404.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="reset.css">
+  <link rel="stylesheet" href="styles.css">
+  <title>Document</title>
 </head>
 
 <body>
-    <div class="container">
-        <header>
-            <h1>Pomodojo</h1>
-        </header>
+  <div class="container">
+    <header>
+      <h1>Pomodojo</h1>
+    </header>
 
-        <div class="toolbar">
-            <div id="project-info">
-                <h2>Active Project:</h2>
-                <span id="project-display"></span>
-                <div id="level-display"></div>
-                <div id="project-select">
-                    <label for="project-select">Select Project:</label>
-                    <select name="project-select" id="project-select-dropdown"></select>
-                </div>
-            </div>
+    <div class="toolbar">
+      <div id="project-info">
+        <h2>Active Project:</h2>
+        <span id="project-display"></span>
+        <div id="level-display"></div>
+        <div id="project-select">
+          <label for="project-select">Select Project:</label>
+          <select name="project-select" id="project-select-dropdown"></select>
         </div>
-
-        <div class="lsidebar">
-            <ul>
-                <li id="projects-div">
-                    <a id="projects-list-link"href="#">Projects</a>
-                    <div id="projects-list"></div>
-                </li>
-                <li id="skills-div">
-                    <a id="skills-list-link" href="#">Skills</a>
-                    <div id="skills-list"></div>
-                </li>
-            </ul>
-            <button id="new-project-button">New Project</button>
-        </div>
-
-        <div class="rsidebar">
-
-        </div>
-
-        <main>
-            <div id="timer" class="card">
-                <h2> Timer</h2>
-                <div class="card-content">
-                    <div id="clock-display"></div>
-                    <div id="unassigned-poms"></div>
-                    <div id="clock-controls">
-                        <button id="start-button">Start</button>
-                        <button id="stop-button">Stop</button>
-                        <button id="reset-button">Reset</button>
-                    </div>
-                </div>
-            </div>
-            <div id="progress-card" class="card">
-                <h2 id="project-progress-title"></h2>
-                <div class="card-content">
-                    <div id="poms-display"></div>
-                    <p>Click crystal to assign to a project</p>
-                </div>
-            </div>
-            <div class="card">
-                <h2>Settings</h2>
-                <div class="card-content"></div>
-            </div>
-
-            <div class="settings">
-                <form id="settings">
-                    <label for="pom-length-input">Pomodoro Length:</label>
-                    <input type="text" id="pom-length-input">
-                    <label for="break-length-input">Break Length:</label>
-                    <input type="text" id="break-length-input">
-                </form>
-            </div>
-
-
-        </main>
-        <footer>
-            <p>Blah blah blah</p>
-        </footer>
+      </div>
     </div>
+
+    <div class="lsidebar">
+      <ul>
+        <li id="projects-div">
+          <a id="projects-list-link" href="#">Projects</a>
+          <div id="projects-list"></div>
+        </li>
+        <li id="skills-div">
+          <a id="skills-list-link" href="#">Skills</a>
+          <div id="skills-list"></div>
+        </li>
+      </ul>
+      <button id="new-project-button">New Project</button>
+    </div>
+
+    <div class="rsidebar">
 
     </div>
 
-    <script src="script.js"></script>
+    <main>
+      <div class="card pixel-card">
+        <div class="card-content" id="pixel-scene">
+          <img src="pixel-scene3.jpg" alt="Pixel Progress Bar Scene">
+          <img id="dude-png" src="dude1.png" alt="">
+        </div>
+
+      </div>
+      <div id="timer" class="card">
+        <h2> Timer</h2>
+        <div class="card-content">
+          <div id="clock-display"></div>
+          <div id="unassigned-poms"></div>
+          <div id="clock-controls">
+            <button id="start-button">Start</button>
+            <button id="stop-button">Stop</button>
+            <button id="reset-button">Reset</button>
+          </div>
+        </div>
+      </div>
+      <div id="progress-card" class="card">
+        <h2 id="project-progress-title"></h2>
+        <div class="card-content">
+          <div id="poms-display"></div>
+          <p>Click crystal to assign to a project</p>
+        </div>
+      </div>
+      <div class="card settings">
+        <h2>Settings</h2>
+        <div class="card-content"></div>
+      </div>
+
+      <div class="settings">
+        <form id="settings">
+          <label for="pom-length-input">Pomodoro Length:</label>
+          <input type="text" id="pom-length-input">
+          <label for="break-length-input">Break Length:</label>
+          <input type="text" id="break-length-input">
+        </form>
+      </div>
+
+
+    </main>
+    <footer>
+      <p><a href="https://www.freepik.com/vectors/vintage">Vintage vector created by stockgiu - www.freepik.com</a></p>
+    </footer>
+  </div>
+
+  </div>
+
+  <script src="script.js"></script>
 </body>
 
 </html>

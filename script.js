@@ -256,6 +256,7 @@ class Skill {
         pomodoro.project = user.activeProject;
         let pomIndex = this.pomsList[this.level].push(pomodoro) - 1;
         pomodoro.setLocation(this.level, pomIndex)
+        gui.updateDisplay();
         if (this.getPomCount() >= 40) {
             this.levelUp();
         }
@@ -396,6 +397,7 @@ class Pomodoro {
             };
         }
         tick = tick.bind(this);
+        gui.startHero();
         this.timerId = setTimeout(tick, 1000);
     }
 
@@ -421,10 +423,14 @@ class Pomodoro {
      */
     complete() {
         this.stop();
+        gui.completeHero();
         this.completed = true;
-        user.activeProject.addPom(this);
-        user.newPomodoro();
-        gui.updateDisplay();
+        setTimeout(() => {
+            gui.dudepng.style.left = '2%';
+            gui.updateDisplay();
+            user.activeProject.addPom(this);
+            user.newPomodoro();
+        }, 3200);
     }
 
     reassign(projectName) {
@@ -438,11 +444,6 @@ class Pomodoro {
 
 
 
-let defaultSettings = {
-    pomLength: 0.1,
-    breakLength: 5,
-    longBreakLength: 15,
-}
 
 
 /* SET UP ENVIRONMENT */
@@ -466,11 +467,14 @@ let gui = {
     projectSelect: document.getElementById('project-select'),
     projectSelectDropdown: document.getElementById('project-select-dropdown'),
     projectsListLink: document.getElementById('projects-list-link'),
+    pixelScene: document.getElementById('pixel-scene'),
+    dudepng: document.getElementById('dude-png'),
     
     setUpMenus: function() {
         this.projectsListLink.addEventListener('click', () => this.projectsList.style.display = this.projectsList.style.display == "block" ? "none" : "block");
 
     },
+
 
     addEvents: function () {
         this.start.addEventListener('click', () => user.activePom.start());
@@ -488,6 +492,38 @@ let gui = {
         this.projectSelectDropdown.addEventListener('change', changeProjectDropdown);
     },
 
+    startHero: function () {
+        this.redCrystal = document.createElement('img');
+        this.redCrystal.setAttribute('src', 'redcrystal.png');
+        this.redCrystal.id = 'red-crystal';
+        gui.pixelScene.appendChild(this.redCrystal);
+        let startPos = 0.02 * gui.pixelScene.offsetWidth;
+        let endPos = gui.pixelScene.offsetWidth - 0.1 * gui.pixelScene.offsetWidth;
+        let distance = endPos - startPos;
+        let stepFreq = 125; // milliseconds 
+        let stepSize = distance / (user.activePom.length * 60 * (1000 / stepFreq));
+        let currentPos = startPos;
+        function tick() {
+            gui.dudepng.style.left = `${currentPos}px`;
+            currentPos += stepSize;
+            gui.dudepng.style.left = `${Math.floor(currentPos)}px`;
+            if (currentPos < endPos) {
+                timerId = setTimeout(tick, stepFreq);
+            }
+            else {
+                clearTimeout(timerId);
+            }
+        }
+        tick = tick.bind(this);
+        let timerId = setTimeout(tick, stepFreq);
+    },
+
+    completeHero() {
+        this.redCrystal.classList.add('win-crystal');
+        setTimeout(() => this.redCrystal.remove(), 3000);
+        
+    },
+
     updateClockDisplay: function (remaining) {
         this.clock.innerText = timeToString(remaining);
     },
@@ -495,7 +531,7 @@ let gui = {
     updateDisplay: function () {
         // ACTIVE PROJECT
         let activeProject = user.getActiveProject();
-        this.project.innerText = activeProject.getName() == "unassigned" ?  "No Project Selected" : activeProject.getName();
+        this.project.innerText = activeProject.getName() == "unassigned" ? "No Project Selected" : activeProject.getName();
         this.level.innerText = `${activeProject.getName() == "unassigned" ? "" : " Level " + activeProject.getLevel()}`;
 
         // Poms Display
@@ -595,6 +631,11 @@ let gui = {
     }
 }
 
+let defaultSettings = {
+    pomLength: 0.1,
+    breakLength: 5,
+    longBreakLength: 15,
+}
 /**
  * Takes in the time in minutes and returns a string formatted mm:ss 
  * @param {number} time The time in ms
@@ -616,7 +657,7 @@ let session = user.newSession();
 
 user.addProject(new Project('Coding'));
 user.setActiveProject(user.projectsList['Coding']);
-for (let i = 0; i < 39; i++) {
+for (let i = 0; i < 38; i++) {
     let pom = new Pomodoro(25, true, true, 0);
     user.projectsList['Coding'].addPom(pom);
 }

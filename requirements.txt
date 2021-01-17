@@ -1,9 +1,13 @@
 Version 6
 [ ] Timer is represented by a little hero running along a path towards a crystal defeating monsters
+[ ] Crystal when reached jumps out of hero scene grows large in middle of page with a celebratory noise then goes into crystal chest
+
 
 Version 5
 [ ] CSS Transitions on menus
 [ ] Remove all direct accessing of properties outside of the object itself
+[ ] Persistent storage
+[ ] User login?
 
 Version 4
 [ ] Restructure to do more sending of params to functions and returning useful values 
@@ -17,6 +21,9 @@ Version 4
 [X] The default project name should be "unassigned"
 [X] When a pomodoro is complete a diamond should appear underneath unassigned
 [X] There should be an option to assign a completed pomodoro to a different project
+[ ] Change all px sizes to rem / em
+[ ] order css properly
+[ ] add aside
 [ ] When the timer completes project should change to Break and timer should reset to break timer
 [ ] Break is a hidden project
 [ ] Break pomodoro is a hidden pomodoro
