@@ -44,7 +44,7 @@ main {
   grid-template-rows: 3rem 3rem auto 3rem;
   grid-template-areas:
   "h h h h h h h h h h h h"
-  "p p p p p p p p p p p p"
+  "l p p p p p p p p p p p"
   "l m m m m m m m m m m m"
   "l m m m m m m m m m m m";
 }
@@ -57,7 +57,7 @@ header {
 
 .toolbar {
   grid-area: p;
-  background-color: var(--color3);
+  background-color: hsla(220, 10%, 90%, 50%);
 }
 
 main {
@@ -99,6 +99,9 @@ header h1 {
 }
 
 /* TOOLBAR */
+.blah {
+  color: white;
+}
 
 #project-info {
   display: flex;
@@ -209,43 +212,22 @@ header h1 {
 
 /* POMODORO CHEST CARD */
 
+#progress-card {
+}
+
 #poms-display {
-  width: 60%;
+  width: 14rem;
   margin: 1.25rem;
-  padding: .313rem;
+  padding: .2rem;
   border: 1px dashed #555;
-  text-align: left;
   font-size: 1rem;
   color: red;
 }
 
-.poms-div {
-  border: 1px solid black;
-  text-align: left;
-  font-size: .5rem;
-}
-
-.poms-div table {
-  width: 100%;
-  border: 1px solid black;
-  border-collapse: collapse;
-  border-color: #eee;
-  border-radius: 15%;
-}
-
-.poms-div table tr {
-  height: 1rem;
-}
-
-.poms-div table td {
-  width: 1em;
-}
-
-.poms-div table td.filled {
-  background: red;
-}
-
 /* SETTINGS CARD */
+.blah {
+  color: white;
+}
 
 .settings {
   display: none;
@@ -262,10 +244,14 @@ header h1 {
 
 /* SIDEBAR */
 
-.lsidebar a {
+.lsidebar li {
+  margin-bottom: 1.2em;
+}
+
+.lsidebar li a {
   display: block;
   width: 100%;
-  padding: 0.313rem;
+  padding: 0.6em;
   font-size: 1.2rem;
   font-family: Arial, Helvetica, sans-serif;
   text-align: center;
@@ -287,8 +273,25 @@ header h1 {
   flex-grow: 1;
 }
 
-#projects-list ul li {
-  padding: 1em;
+#projects-list div {
+  padding: 0.5em;
+}
+
+#projects-list table {
+  width: 100%;
+  border: 1px solid black;
+  border-collapse: collapse;
+  border-color: #eee;
+  border-radius: 15%;
+}
+#projects-list table tr {
+  height: 1rem;
+}
+#projects-list table td {
+  width: 1rem;
+}
+#projects-list table td.filled {
+  background: red;
 }
 
 #new-project-button {
@@ -299,8 +302,4 @@ header h1 {
 
 .inactive {
   display: none;
-}
-
-.blah {
-  color: white;
 }
